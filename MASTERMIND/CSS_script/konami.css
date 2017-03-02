@@ -1,0 +1,22 @@
+#konami{
+  position:absolute;
+  left: 20%;
+}
+
+#tableKonami {
+  height: 80%;
+  margin-top: 0;
+}
+
+#trKonami {
+  height: 20%;
+  color: blue;
+  text-align: center;
+}
+
+#trKonami #tdKonami{
+  border: 2px solid black;
+  height: 20px;
+  width: 50px;
+  text-align: center;
+}

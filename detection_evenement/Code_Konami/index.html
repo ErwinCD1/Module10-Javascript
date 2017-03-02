@@ -1,0 +1,76 @@
+<!--https://snazzymaps.com/-->
+
+
+<!-- Déclaration type HTML5 -->
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta charset="utf-8" />
+  <title>HTML5 Détection evenement</title>
+  <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+ </head>
+
+ <body>
+   <h1>Code Konami<h1/>
+
+   <div style = "display:none;" id="konami"> Code Konami
+
+     <div>Contenu de Page<div/>
+
+  <script type="text/javascript">
+
+
+  /**
+ * Created by stagiaire on 27/02/2017.
+ */
+
+console.log('coucou');
+var idCode = 0;
+var cleaner = 1;
+var cheatCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b','a'];
+$( document ).ready(function(){
+    $(document).on('keyup', function(event){
+        //console.log(event.key + " " + idCode + " --> " + cheatCode[idCode]);
+
+        if (event.key == cheatCode[idCode]){
+            idCode++;
+        }else{
+            idCode = 0;
+            $( "#konami" ).hide();
+            resetDisco();
+        }
+
+        if (idCode == 10){
+            console.log('tu as trouvé le code secret !!!');
+            $( "#konami" ).show();
+            setInterval(konamiDisco, 10)
+
+        }
+
+        function konamiDisco() {
+            var r = Math.floor(Math.random() * 255);
+            var g = Math.floor(Math.random() * 255);
+            var b = Math.floor(Math.random() * 255);
+            document.getElementsByTagName("body")[0].style.backgroundColor = "rgb("+r+","+g+","+b+")";
+
+        }
+
+        function resetDisco() {
+            clearInterval(cleaner);
+            cleaner++;
+            var r = 255;
+            var g = 255;
+            var b = 255;
+            document.getElementsByTagName("body")[0].style.backgroundColor = "rgb("+r+","+g+","+b+")";
+
+        }
+    })
+
+
+});
+
+
+
+  </script>
+ </body>
+</html>

@@ -1,0 +1,36 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+<script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+</head>
+
+<body>
+<p> Nous sommes le <span class="today"></span> </p>
+<p> La pause est à <span class="pause"></span> </p>
+<p> Il reste donc <span class="min"></span>:<span class="sec"></span></p>
+
+
+</body>
+
+</html>
+
+
+<script type="text/javascript">
+var today = new Date
+var pause = new Date(2017, 02, 27, 12, 30, 00)
+var diff = pause - today
+var sec, min, tmp
+
+$('.today').text(today.toLocaleString())
+$('.pause').text(pause.toLocaleString())
+
+tmp = Math.floor(diff/1000)
+sec = diff % 60
+tmp = Math.floor((diff - sec)/60)
+min = diff % 60
+
+$('.min').text(min)
+$('.sec').text(sec)
+
+</script>

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.maskedinput/1.4.1/jquery.maskedinput.min.js"></script>
+    <title>Formulaire validation</title>
+    <meta charset='utf-8'>
+</head>
+<body>
+  <h1>Formulaire de validation avec Jquery avec MASK</h1>
+    <form action="" method="POST" id="form">
+        <p><label for="decalage" >
+            Décalage :
+            <input name="decalage" id="decalage" type="text">
+        </label></p>
+        <p><label for="texte" >
+            Votre texte :
+            <input name="texte" id="texte" type="text">
+        </label></p>
+        <p><input type="submit"></p>
+    </form>
+    <p><span id="result"></span></p>
+</body>
+</html>
+
+
+
+<script type='text/javascript'>
+        var alphabet = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z']
+
+        $(function () {
+            $("#decalage").mask('9?999999999999999999999');
+            $("#texte").   mask('a?aaaaaaaaaaaaaaaaaaaaa');
+        });
+
+         $('#form').on('submit',function(e){
+           e.preventDefault();
+           if ($("#decalage").val() != "" && $("#texte").val() != "") {
+
+             var decalage = parseInt($('#decalage').val());
+             var texte    = $('#texte').val();
+             var result   = $('#result').val();
+
+             for (let i = 0; i < $('#texte').val().length; i++) {
+               var index = alphabet.indexOf(texte[i]);
+               if((index + decalage) > 25){
+                   newindex =  (index + decalage ) % 26
+                   result += alphabet[newindex];
+                 //console.log(index);
+               }
+               else {
+
+                 result += alphabet[index+decalage];
+                 //console.log(index);
+               }
+             }
+
+             console.log(result);
+             $('#result').text("Votre cryptage César est : "+result);
+             $('#result').show();
+
+           }
+           else {
+             console.log("Aucune valeur saisi.");
+             $('#result').text("Aucune valeur saisi.");
+             $('#result').show();
+           }
+         });
+
+
+</script>

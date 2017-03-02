@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Formulaire validation sans MASK</title>
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+    <meta charset='utf-8'>
+</head>
+<body>
+  <h1> Formulaire de validation avec Jquery sans MASK</h1>
+    <form action="" method="POST" class="form">
+        <label for="decalage" >
+            Décalage :
+            <input name="decalage" id="decalage" type="text">
+        </label>
+        <label for="texte" >
+            Votre texte :
+            <input name="texte" id="texte" type="text">
+        </label>
+        <input type="submit">
+    </form>
+    <p id="cesar" style="display: none;"> En cryptage césar, votre texte devient :  <span style="display: none; font-weight: bold; " id="newletter"></span> </p>
+</body>
+</html>
+
+
+<script>
+$(document).ready(function() {
+
+  var alphabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z' ];
+  $('.form').on('submit', function(e) {
+      e.preventDefault(); //Empêche par défaut l'envoi du formulaire
+      if($('#decalage').val() != ""){
+        if(isNaN($('#decalage').val()) == false){
+          if($('#texte').val() != "" && isNaN($('#texte').val()) == true ){
+
+          //this.submit() //Envoi du formulaire
+
+//Cryptage CESAR
+            var decalage = parseInt($('#decalage').val())
+            var texte = $('#texte').val()
+            texte = texte.toLowerCase();
+            var newtext = $('#newletter').val()
+
+            for(let i = 0; i < $('#texte').val().length; i++){
+              var index = alphabet.indexOf(texte[i])
+              if((index + decalage) > 25 ){
+                var newindex = (index + decalage) % 26
+                newtext += alphabet[newindex]
+              }else
+                newtext += alphabet[index + decalage]
+            }
+            $('#cesar').show()
+            $('#newletter').text(newtext)
+            $('#newletter').show()
+
+          }else{
+            window.alert('Le texte doit être non nul et ne doit pas être un nombre')
+          }
+        }else{
+          window.alert('Le décalage doit être un nombre')
+        }
+      }else{
+        window.alert('Remplissez le décalage !')
+      }
+  })
+})
+</script>

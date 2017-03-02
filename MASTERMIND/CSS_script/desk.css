@@ -1,0 +1,96 @@
+body {
+color:darkblue;
+background-color:white;
+background-image:url(../pictures/3.jpg);
+}
+
+#desk{
+  position:absolute;
+  left: 40%;
+}
+
+table {
+  margin-top: 30px;
+  height: 80%;
+}
+
+table tr th {
+  height: 20%;
+  color: blue;
+  text-align: center;
+}
+
+table tr td {
+  border: 2px ridge black;
+  height: 20px;
+  width: 50px;
+  text-align: center;
+}
+
+#red{
+  background-color: red;
+  width: 5px;
+  height: 5px;
+  border: 1px solid black;
+}
+
+#white{
+  background-color: white;
+  width: 5px;
+  height: 5px;
+  border: 1px solid black;
+}
+.container {
+  position: absolute;
+  top: 50%;
+  left: 80%;
+  margin-left: -64.5px;
+  margin-top: -85.5px;
+}
+
+.ghost {
+  animation: float 3s ease-out infinite;
+}
+
+@keyframes float {
+  50% {
+     transform: translate(0, 20px);
+  }
+}
+.shadowFrame {
+  width: 130px;
+  margin-top: 15px;
+}
+.shadow {
+  animation: shrink 3s ease-out infinite;
+  transform-origin: center center;
+  ellipse {
+    transform-origin: center center;
+  }
+}
+
+@keyframes shrink {
+  0% {
+    width: 90%;
+    margin: 0 5%;
+  }
+  50% {
+    width: 60%;
+    margin: 0 18%;
+  }
+  100% {
+    width: 90%;
+    margin: 0 5%;
+  }
+}
+
+
+
+
+/*  resultGame  */
+
+#resultGame{
+  position: absolute;
+  top:35%;
+  left:55%;
+}

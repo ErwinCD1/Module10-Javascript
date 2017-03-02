@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Formulaire validation</title>
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+    <meta charset='utf-8'>
+</head>
+<body>
+    <form action="" method="POST" class="form">
+      <fieldset>
+        <legend> Création d'un vin </legend>
+        <label for="name" >
+            Nom :
+            <input name="name" id="name" type="text">
+        </label><br>
+        <label for="grapes" >
+            Couleur :
+            <input name="grapes" id="grapes" type="text">
+        </label><br>
+        <label for="country" >
+            Pays:
+            <input name="country" id="country" type="text">
+        </label><br>
+        <label for="region" >
+            Région :
+            <input name="region" id="region" type="text">
+        </label><br>
+        <label for="year" >
+            Année :
+            <input name="year" id="year" type="text">
+        </label><br>
+        <label for="description" >
+            Description :
+            <input name="description" id="description" type="text">
+        </label><br>
+        <input type="submit">
+      </fieldset>
+    </form>
+</body>
+</html>
+
+<script>
+//post put delete
+$(document).ready(function(){
+  $('.form').on('submit', function(e){
+    e.preventDefault();
+    var nameP = $('#name').val()
+    var grapesP = $('#grapes').val()
+    var countryP = $('#country').val()
+    var regionP = $('#region').val()
+    var yearP= $('#year').val()
+    var descriptionP = $('#description').val()
+// CREATE WINE
+ /*$.ajax({
+      url: 'http://192.168.1.223/v1/wines',
+      type: 'POST',
+      data: {
+        name: nameP,
+        grapes: grapesP,
+        country: countryP,
+        region: regionP,
+        year: yearP,
+        description: descriptionP,
+      },
+      success: function(data){
+        console.log(data)
+      },
+      error: function(err) {
+        console.log("erreur")
+      }
+    })*/
+
+ // ALL WINES
+    $.ajax({
+         url: 'http://192.168.1.223/v1/wines',
+         type: 'GET',
+         success: function(res){
+           console.log(res)
+         },
+         error: function(err) {
+           console.log("erreur")
+         }
+       })
+
+//ONE WINE
+      /*$.ajax({
+            url: 'http://192.168.1.223/v1/wines/31',
+            type: 'GET',
+            success: function(res){
+              console.log(res)
+            },
+            error: function(err) {
+              console.log("erreur")
+            }
+          })*/
+
+// DELETE WINE
+/*$.ajax({
+     url: 'http://192.168.1.223/v1/wines/31',
+     type: 'DELETE',
+     success: function(res){
+       console.log(res)
+     },
+     error: function(err) {
+       console.log("erreur")
+     }
+   })
+*/
+
+// UPDATE WINE
+/*$.ajax({
+     url: 'http://192.168.1.223/v1/wines/31',
+     type: 'PUT',
+     data: {
+       name: nameP,
+       grapes: grapesP,
+       country: countryP,
+       region: regionP,
+       year: yearP,
+       description: descriptionP,
+     },
+     success: function(res){
+       console.log(res)
+     },
+     error: function(err) {
+       console.log("erreur")
+     }
+   })*/
+
+
+ })
+})
+
+</script>

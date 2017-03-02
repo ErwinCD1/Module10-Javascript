@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>cubecam</title>
+<style type="text/css">
+
+body{
+	background-color:#b2bdc6;
+}
+
+.container{
+
+	-webkit-perspective : 1300;
+	-moz-perspective : 1300;
+	
+}
+#cube{
+-webkit-transform: rotateY(75deg)rotateX(180deg)rotateZ(190deg);
+	-moz-transform: rotateY(75deg)rotateX(180deg)rotateZ(190deg);
+  	width: 500px;
+	height: 500px;
+	margin: 0 auto 40px;
+	-webkit-transform-style: preserve-3d;
+	-webkit-transition: -webkit-transform 2s;
+	-moz-transform-style: preserve-3d;
+	-moz-transition: -moz-transform 2s;
+}
+
+#dessus{
+position:absolute;
+	background-color:#666666;
+	height:500px;
+	width:500px;
+   	-webkit-transform: rotateX( 90deg )translateZ( -250px );
+	-moz-transform: rotateX( 90deg )translateZ( -250px );
+}
+
+#dessous{
+position:absolute;
+	background-color:#666666;
+	height:500px;
+	width:500px;
+   	-webkit-transform: rotateX( 90deg )translateZ( 2250px );
+	-moz-transform: rotateX( 90deg )translateZ( 2250px );
+}
+
+#face{
+display:block;
+background-color:#555555;
+   	-webkit-transform: translateZ( 250px );
+	-moz-transform: translateZ( 250px );
+	width:500px;
+   	height:500px;
+}
+#fond{
+display:block;
+background-color:gray;
+	-webkit-transform: translateZ( -250px )translateY( -500px );
+	-moz-transform: translateZ( -250px )translateY( -500px );
+	width:500px;
+   	height:500px;
+}
+#gauche{
+display:block;
+background-color:#333333;
+	-webkit-transform: rotateY( 90deg ) translateZ( 250px )translateY( -1500px );
+	-moz-transform: rotateY( 90deg ) translateZ( 250px )translateY( -1500px );
+	width:500px;
+   	height:500px;
+}
+#droite{
+display:block;
+background-color:#666666;
+	-webkit-transform: rotateY( -90deg ) translateZ( 250px)translateY( -1000px );
+	-moz-transform: rotateY( -90deg ) translateZ( 250px)translateY( -1000px );
+	width:500px;
+   	height:500px;
+}
+
+</style>
+
+<script type="text/javascript">
+
+var kcubecam={
+
+vaval:0,
+vavam:0,
+inter:null,
+a:0,
+tbm:new Array,
+
+azerty:function(sens){
+
+		var elem=document.getElementById("cube");
+
+		if(sens=='droite'){
+			this.vaval+=45
+			elem.style.WebkitTransform='rotateX('+this.vavam+'deg) rotateZ('+this.vaval+'deg)';
+			elem.style.MozTransform='rotateX('+this.vavam+'deg) rotateZ('+this.vaval+'deg)';
+		}
+
+		if(sens=='gauche'){
+			this.vaval-=45;
+			elem.style.WebkitTransform='rotateX('+this.vavam+'deg) rotateZ('+this.vaval+'deg)';
+			elem.style.MozTransform='rotateX('+this.vavam+'deg) rotateZ('+this.vaval+'deg)';
+		}
+
+		if(sens=='haut'){
+			this.vavam+=45;
+			elem.style.WebkitTransform='rotateX('+this.vavam+'deg) rotateY('+this.vaval+'deg)';
+			elem.style.MozTransform='rotateX('+this.vavam+'deg) rotateY('+this.vaval+'deg)';
+		}
+
+		if(sens=='bas'){
+			this.vavam-=45;
+			elem.style.WebkitTransform='rotateX('+this.vavam+'deg) rotateY('+this.vaval+'deg)';
+			elem.style.MozTransform='rotateX('+this.vavam+'deg) rotateY('+this.vaval+'deg)';
+		}
+
+	},
+
+	clone0:function(){
+
+	var vivi = document.getElementById('sourcevid');
+
+	var moncanvas2=document.createElement('canvas');
+	moncanvas2.width=50;
+	moncanvas2.height=50;
+	var moncanvas2d=moncanvas2.getContext('2d');
+	moncanvas2d.drawImage(vivi,0,0,50,50);
+	
+	if(kcubecam.tbm.length==0){
+		for(var i=0;i<100;i++){
+			kcubecam.tbm.push(moncanvas2d.getImageData( 0, 0, 50, 50));
+		}
+	}
+	
+	kcubecam.tbm.unshift(moncanvas2d.getImageData( 0, 0, 50, 50));
+	kcubecam.tbm.pop();
+	
+	var can = document.getElementById('fond');
+	var canvas1 = document.getElementById('fond').getContext('2d');
+	
+	for(var i=0;i<10;i++){
+		
+		for(var j=0;j<10;j++){
+			
+			canvas1.putImageData(kcubecam.tbm[(i*10)+j],j*50,i*50);
+			
+		}
+	}
+	kcubecam.copie(can)
+},
+
+
+clone1:function(){
+
+	var vivi = document.getElementById('sourcevid');
+	var can = document.getElementById('fond');
+	var canvas1 = can.getContext('2d');
+	
+	kcubecam.a >= Math.PI*2 ? kcubecam.a=0 : null;
+	
+	for(var i=50;i<=500;i+=50){
+		
+		for(var j=50;j<=500;j+=50){
+			
+			canvas1.save();
+			canvas1.translate(j-25,i-25);
+			canvas1.rotate(kcubecam.a);
+			canvas1.drawImage(vivi,-25,-25,50,50);
+			canvas1.restore();
+		}
+	}
+	kcubecam.copie(can);
+	canvas1.drawImage(vivi,150,150,200,200);
+	kcubecam.a+=Math.PI/32;
+	
+},
+
+clone2:function(){
+
+	var vivi = document.getElementById('sourcevid');
+	var can = document.getElementById('fond');
+	var canvas1 = can.getContext('2d');
+	
+	var z=0;
+	
+	for(var i=50;i<=500;i+=50){
+		
+		if (kcubecam.a==3){
+			kcubecam.a=1;
+			var b=7
+		}
+		else{
+			kcubecam.a=3;
+			var b=5;
+		}
+
+		for(var j=50;j<=500;j+=50){
+			
+			if (z==kcubecam.a){
+				z=b;
+			}
+			else{
+				z=kcubecam.a;
+			}
+			canvas1.save();
+			canvas1.translate(j-25,i-25);
+			canvas1.rotate((Math.PI/8)*z*2);
+			canvas1.drawImage(vivi,-25,-25,50,50);
+			canvas1.restore();
+		}
+	}
+	kcubecam.copie(can);
+	
+},
+
+clone3:function(){
+
+	var vivi = document.getElementById('sourcevid');
+	var can = document.getElementById('fond');
+	var canvas1 = can.getContext('2d');
+	
+	for(var i=50;i<=500;i+=50){
+		
+		kcubecam.a=0;
+		for(var j=50;j<=500;j+=50){
+			
+			if (kcubecam.a==2) {
+				kcubecam.a=0;
+			}
+			canvas1.save();
+			canvas1.translate(j-25,i-25);
+			canvas1.rotate(Math.PI*kcubecam.a);
+			canvas1.drawImage(vivi,-25,-25,50,50);
+			kcubecam.a+=1/2;
+			canvas1.restore();
+		}
+	}
+	kcubecam.copie(can);
+	kcubecam.a=0;
+},
+
+
+clone4:function(){
+
+	var vivi = document.getElementById('sourcevid');
+	var can = document.getElementById('fond');
+	var canvas1 = can.getContext('2d');
+	
+	for(var i=50;i<=500;i+=50){
+		
+		for(var j=50;j<=500;j+=50){
+		
+		if (kcubecam.a==2) {
+		kcubecam.a=0;
+		}
+			canvas1.save()
+			canvas1.translate(j-25,i-25);
+			
+			if(kcubecam.a==1 || kcubecam.a==0){
+			canvas1.scale(-1,-1);
+			}
+			canvas1.drawImage(vivi,-25,-25,50,50);
+			kcubecam.a+=1/2;
+			canvas1.restore();
+		}
+	}
+	kcubecam.copie(can);
+	kcubecam.a=0;
+},
+
+clone5:function(){
+
+	var vivi = document.getElementById('sourcevid');
+	var can = document.getElementById('fond');
+	var canvas1 = can.getContext('2d');
+	
+	for(var i=50;i<=500;i+=50){
+		
+		for(var j=50;j<=500;j+=50){
+		
+		if (kcubecam.a==2) {
+		kcubecam.a=0;
+		}
+		
+			canvas1.save();
+			canvas1.translate(j-25,i-25)
+			
+			if(kcubecam.a==1 || kcubecam.a==0){
+			canvas1.scale(-1,1);
+			}
+			canvas1.drawImage(vivi,-25,-25,50,50);
+			kcubecam.a+=1/2;
+			canvas1.restore();
+		}
+	}
+	kcubecam.copie(can);
+	kcubecam.a=0;
+},
+
+clone6:function(){
+	var vivi = document.getElementById('sourcevid');
+	var can = document.getElementById('fond');
+	var canvas1 = can.getContext('2d');
+	
+	for(var i=50;i<=500;i+=50){
+		
+		for(var j=50;j<=500;j+=50){
+		
+		if (kcubecam.a==2) {
+		kcubecam.a=0;
+		}
+		
+			canvas1.save();
+			canvas1.translate(j-25,i-25)
+			
+			if(kcubecam.a==1 || kcubecam.a==0){
+			canvas1.scale(1,-1);
+			}
+			canvas1.drawImage(vivi,-25,-25,50,50);
+			kcubecam.a+=1/2;
+			canvas1.restore();
+		}
+	}
+	kcubecam.copie(can);
+	kcubecam.a=0;
+},
+
+clone7:function(){
+	var vivi = document.getElementById('sourcevid');
+	var can = document.getElementById('fond');
+	var canvas1 = can.getContext('2d');
+	
+	for(var i=50;i<=500;i+=50){
+		
+		for(var j=50;j<=500;j+=50){
+		
+		if (kcubecam.a==2) {
+		kcubecam.a=0;
+		}
+			canvas1.save();
+			canvas1.translate(j-25,i-25)
+			
+			if(kcubecam.a==0 || kcubecam.a==1.5){
+			canvas1.scale(-1,1);
+			}
+			canvas1.drawImage(vivi,-25,-25,50,50);
+			kcubecam.a+=1/2;
+			canvas1.restore();
+		}
+	}
+	kcubecam.copie(can)
+	kcubecam.a=0
+},
+
+clone8:function(){
+	var vivi = document.getElementById('sourcevid');
+	var can = document.getElementById('fond');
+	var canvas1 = can.getContext('2d');
+	
+	for(var i=50;i<=500;i+=50){
+	
+		for(var j=50;j<=500;j+=50){
+		
+		if (kcubecam.a==2) {
+		kcubecam.a=0;
+		}
+		
+			canvas1.save();
+			canvas1.translate(j-25,i-25);
+			
+			if(kcubecam.a==1 || kcubecam.a==1.5){
+			canvas1.scale(1,-1);
+			}
+			canvas1.drawImage(vivi,-25,-25,50,50);
+			kcubecam.a+=1/2;
+			canvas1.restore();
+		}
+	}
+	kcubecam.copie(can);
+	kcubecam.a=0;
+},
+
+
+
+
+clone9:function(){
+
+	var vivi = document.getElementById('sourcevid');
+
+	var moncanvas2=document.createElement('canvas');
+	moncanvas2.width=500;
+	moncanvas2.height=500;
+	var moncanvas2d=moncanvas2.getContext('2d');
+	moncanvas2d.drawImage(vivi,0,0,500,500);
+	
+	var idata=moncanvas2d.getImageData( 0, 0, 500, 500);
+	var data =  idata.data;
+	var nbdcoul=32
+	
+	for(var i = 0; i < data.length; i++) {
+				
+		if (data[i]>nbdcoul*0 && data[i]<nbdcoul*1){
+     	data[i]=-nbdcoul*0;
+		}
+		
+		if (data[i]>nbdcoul*1 && data[i]<nbdcoul*2){
+		data[i]=nbdcoul*1;
+		}
+		
+		if (data[i]>nbdcoul*2 && data[i]<nbdcoul*3){
+		data[i]=nbdcoul*2;
+		}
+		
+		if (data[i]>nbdcoul*3 && data[i]<nbdcoul*4){
+		data[i]=nbdcoul*3;
+		}
+		
+		if (data[i]>nbdcoul*4 && data[i]<nbdcoul*5){
+		data[i]=nbdcoul*4;
+		}
+		
+		if (data[i]>nbdcoul*5 && data[i]<nbdcoul*6){
+		data[i]=nbdcoul*5;
+		}
+		
+		if (data[i]>nbdcoul*6 && data[i]<nbdcoul*7){
+		data[i]=nbdcoul*6;
+		}
+		
+		if (data[i]>nbdcoul*7 && data[i]<nbdcoul*8){
+		data[i]=nbdcoul*7;
+		}
+		
+		if (data[i]>nbdcoul*8 && data[i]<nbdcoul*9){
+		data[i]=nbdcoul*8;
+		}
+		
+		}
+	
+	var can = document.getElementById('fond');
+	var canvas1 = document.getElementById('fond').getContext('2d');
+	
+			canvas1.putImageData(idata,0,0);
+			
+	kcubecam.copie(can)
+},
+
+
+clone10:function(){
+	var vivi = document.getElementById('sourcevid');
+
+	var moncanvas2=document.createElement('canvas');
+	moncanvas2.width=500;
+	moncanvas2.height=500;
+	var moncanvas2d=moncanvas2.getContext('2d');
+	moncanvas2d.drawImage(vivi,0,0,500,500);
+	
+		
+	var idata=moncanvas2d.getImageData( 0, 0, 500, 500);
+	var data =  idata.data;
+	
+	for(var i = 0; i < data.length; i+=4){
+		var r = data[i];
+		var g = data[i+1];
+		var b = data[i+2];
+		var noireblanc = (0.299*r+0.587*g+0.0721*b);
+		data[i] = noireblanc;
+		data[i+1] = noireblanc;
+		data[i+2] = noireblanc;
+	}
+	
+		var can = document.getElementById('fond');
+	var canvas1 = document.getElementById('fond').getContext('2d');
+	
+	
+			
+			canvas1.putImageData(idata,0,0);
+			
+
+	kcubecam.copie(can)
+},
+
+
+clone11:function(){
+
+	var vivi = document.getElementById('sourcevid');
+
+	var moncanvas2=document.createElement('canvas');
+	moncanvas2.width=500;
+	moncanvas2.height=500;
+	var moncanvas2d=moncanvas2.getContext('2d');
+	moncanvas2d.drawImage(vivi,0,0,500,500);
+	var idata=moncanvas2d.getImageData( 0, 0, 500, 500);
+	var data =  idata.data;
+	var taille=500*4
+	var pixeli=12
+	
+	for(var i = 0; i < data.length; i+=taille*pixeli){
+		
+		for(var j = 0; j < taille; j+=pixeli*4){
+			
+			var coulcourante1=data[i+j];
+			var coulcourante2=data[i+j+1];
+			var coulcourante3=data[i+j+2];
+			
+			for(var k = 0; k < pixeli*4; k+=4){
+
+				for(var l = 0; l < pixeli; l+=1){
+					
+					data[i+j+k+(taille*l)]=coulcourante1;
+					data[i+j+k+1+(taille*l)]=coulcourante2;
+					data[i+j+k+2+(taille*l)]=coulcourante3;
+				}
+			}
+		}
+	}
+	var can = document.getElementById('fond');
+	var canvas1 = document.getElementById('fond').getContext('2d');
+	
+	
+	idata.data=data
+	canvas1.putImageData(idata,0,0);
+	
+
+	kcubecam.copie(can)
+},
+
+
+
+clone122:function(){
+
+	var vivi = document.getElementById('sourcevid');
+
+	var moncanvas2=document.createElement('canvas');
+	moncanvas2.width=500;
+	moncanvas2.height=500;
+	var moncanvas2d=moncanvas2.getContext('2d');
+	moncanvas2d.drawImage(vivi,0,0,500,500);
+	var idata=moncanvas2d.getImageData( 0, 0, 500, 500);
+	var data =  idata.data;
+	var taille=500*4
+	var pixeli=40
+	
+	for(var i = 0; i < data.length; i+=taille*2){
+		
+		for(var j = 0; j < taille; j+=pixeli){
+			
+			var coulcourante1=data[i+j];
+			var coulcourante2=data[i+j+1];
+			var coulcourante3=data[i+j+2];
+			
+			for(var k = 0; k < pixeli; k+=4){	
+				data[i+j+k]=coulcourante1;
+				data[i+j+k+1]=coulcourante2;
+				data[i+j+k+2]=coulcourante3;
+				
+				data[i+j+k+taille]=coulcourante1;
+				data[i+j+k+1+taille]=coulcourante2;
+				data[i+j+k+2+taille]=coulcourante3;
+				
+			}
+			
+		}
+		
+	}
+	
+	var can = document.getElementById('fond');
+	var canvas1 = document.getElementById('fond').getContext('2d');
+	
+	
+	idata.data=data
+	canvas1.putImageData(idata,0,0);
+	
+
+	kcubecam.copie(can)
+},
+
+
+clone12:function(){
+
+	var vivi = document.getElementById('sourcevid');
+
+	var moncanvas2=document.createElement('canvas');
+	moncanvas2.width=500;
+	moncanvas2.height=500;
+	var moncanvas2d=moncanvas2.getContext('2d');
+	moncanvas2d.drawImage(vivi,0,0,500,500);
+	var idata=moncanvas2d.getImageData( 0, 0, 500, 500);
+	var data =  idata.data;
+	var taille=500*4
+	var pixeli=1
+	
+	for(var i = 0; i < data.length; i+=taille*pixeli){
+		
+		for(var j = 0; j < taille; j+=pixeli*4){
+			
+			var coulcourante1=data[i+j];
+			var coulcourante2=data[i+j+1];
+			var coulcourante3=data[i+j+2];
+			
+			for(var k = 1; k < pixeli*4; k+=4){
+
+				for(var l = 0; l < pixeli; l+=1){
+					
+					data[i+j+k+(taille*l)]=coulcourante1;
+					data[i+j+k+1+(taille*l)]=coulcourante2;
+					data[i+j+k+2+(taille*l)]=coulcourante3;
+				}
+			}
+		}
+	}
+	var can = document.getElementById('fond');
+	var canvas1 = document.getElementById('fond').getContext('2d');
+	
+	
+	idata.data=data
+	canvas1.putImageData(idata,0,0);
+	
+
+	kcubecam.copie(can)
+},
+
+
+
+copie:function(can){
+
+	document.getElementById('droite').getContext('2d').drawImage(can,0,0);
+	document.getElementById('gauche').getContext('2d').drawImage(can,0,0);
+	document.getElementById('face').getContext('2d').drawImage(can,0,0);
+	document.getElementById('dessus').getContext('2d').drawImage(can,0,0);
+	document.getElementById('dessous').getContext('2d').drawImage(can,0,0);
+},
+}
+
+function dispatche(effet){
+
+	clearInterval(kcubecam.inter);
+	kcubecam.a=0;
+
+	switch(effet){
+	
+	case 'retard':
+		kcubecam.inter=setInterval(kcubecam.clone0,40);
+		break;
+	case 'rond':
+		kcubecam.a=3;
+		kcubecam.inter=setInterval(kcubecam.clone1,40,kcubecam.a);
+		break;
+	case 'carre':
+		kcubecam.inter=setInterval(kcubecam.clone2,40,kcubecam.a);
+		break;
+	case 'dr':
+		kcubecam.inter=setInterval(kcubecam.clone3,40,kcubecam.a);
+		break;
+	case 'dz':
+		kcubecam.inter=setInterval(kcubecam.clone4,40,kcubecam.a);
+		break;
+	case 'db':
+		kcubecam.inter=setInterval(kcubecam.clone5,40,kcubecam.a);
+		break;
+	case 'dc':
+		kcubecam.inter=setInterval(kcubecam.clone6,40,kcubecam.a);
+		break;
+	case 'dd':
+		kcubecam.inter=setInterval(kcubecam.clone7,40,kcubecam.a);
+		break;
+	case 'de':
+		kcubecam.inter=setInterval(kcubecam.clone8,40,kcubecam.a);
+		break;
+	case 'coul':
+		kcubecam.inter=setInterval(kcubecam.clone9,40,kcubecam.a);
+		break;
+	case 'nb':
+		kcubecam.inter=setInterval(kcubecam.clone10,40,kcubecam.a);
+		break;
+	case 'pixi':
+		kcubecam.inter=setInterval(kcubecam.clone11,40,kcubecam.a);
+		break;
+	case 'pixa':
+		kcubecam.inter=setInterval(kcubecam.clone12,40,kcubecam.a);
+		break;
+		
+	}
+}
+
+function init() {
+
+	video = document.getElementById('sourcevid');
+	
+	if (navigator.getUserMedia) {
+		
+		navigator.getUserMedia('video', successCallback, errorCallback);
+		
+		function successCallback(stream) {
+			video.src = stream;
+			video.play();
+		}
+		function errorCallback(error) {
+			alert('code erreur' + error.code + ']');
+			return;
+		}	
+		
+		
+	}
+	
+	else if (navigator.mozGetUserMedia) {
+		
+		window.navigator.mozGetUserMedia({video:true},
+		
+		function (stream) {
+			video.mozSrcObject = stream;
+			video.play();
+		},
+
+		function (error) {
+			alert('code erreur' + error.code + ']');
+			return;
+		})
+		
+	}
+
+	else if (navigator.webkitGetUserMedia) {
+
+
+		window.navigator.webkitGetUserMedia({video: true},
+		
+		function (stream) {
+			
+			video.src = window.webkitURL.createObjectURL(stream);
+			video.play();
+		},
+		function (error) {
+			alert('code erreur' + error.code + ']');
+			return;
+		})
+	}
+}
+
+window.onload = init;
+
+</script>
+
+</head>
+<body>
+
+<video id="sourcevid" autoplay="true" height='500' width='500' style='display:none'></video>
+
+<div class="container" id="container" style='height:500px;width:500px;margin:auto'>
+        
+	<div id="cube" class="rotation" >
+		<canvas id="dessus" height='500'width='500'></canvas>
+		<canvas id="face" height='500'width='500'></canvas>
+		<canvas id="fond" height='500'width='500'></canvas>
+		<canvas id="droite" height='500'width='500'></canvas>
+		<canvas id="gauche" height='500'width='500'></canvas>
+		<canvas id="dessous" height='500'width='500'></canvas>
+	</div>
+</div>
+<br>
+<div class='bouton' style='margin-top:-100px'>
+
+	<button onclick='kcubecam.azerty("gauche")'>gauche</button>
+	<button onclick='kcubecam.azerty("droite")'>droite</button>
+	<button onclick='kcubecam.azerty("haut")'>haut</button>
+	<button onclick='kcubecam.azerty("bas")'>bas</button>
+	<br>
+	<button onclick='dispatche("retard")' style='height:40px;width:50px;margin:auto'>effet 0</button>
+	<button onclick='dispatche("rond")' style='height:40px;width:50px;margin:auto'>effet 1</button>
+	<button onclick='dispatche("carre")' style='height:40px;width:50px;margin:auto'>effet 2</button>
+	<button onclick='dispatche("dr")' style='height:40px;width:50px;margin:auto'>effet 3</button>
+	<button onclick='dispatche("dz")' style='height:40px;width:50px;margin:auto'>effet 4</button>
+	<br>
+	<button onclick='dispatche("db")' style='height:40px;width:50px;margin:auto'>effet 5</button>
+	<button onclick='dispatche("dc")' style='height:40px;width:50px;margin:auto'>effet 6</button>
+	<button onclick='dispatche("dd")' style='height:40px;width:50px;margin:auto'>effet 7</button>
+	<button onclick='dispatche("de")' style='height:40px;width:50px;margin:auto'>effet 8</button>
+	<button onclick='dispatche("coul")' style='height:40px;width:50px;margin:auto'>effet 9</button>
+	<br>
+	<button onclick='dispatche("nb")' style='height:40px;width:50px;margin:auto'>effet 10</button>
+	<button onclick='dispatche("pixi")' style='height:40px;width:50px;margin:auto'>effet 11</button>
+	<button onclick='dispatche("pixa")' style='height:40px;width:50px;margin:auto'>effet 12</button>
+	</div>
+<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+</body>
+</html>
